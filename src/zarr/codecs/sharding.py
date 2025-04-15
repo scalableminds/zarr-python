@@ -47,7 +47,7 @@ from zarr.core.indexing import (
     BasicIndexer,
     SelectorTuple,
     c_order_iter,
-    get_indexer,
+    guess_indexer,
     morton_order_iter,
 )
 from zarr.core.metadata.v3 import parse_codecs
@@ -475,7 +475,7 @@ class ShardingCodec(
         chunks_per_shard = self._get_chunks_per_shard(shard_spec)
         chunk_spec = self._get_chunk_spec(shard_spec)
 
-        indexer = get_indexer(
+        indexer = guess_indexer(
             selection,
             shape=shard_shape,
             chunk_grid=RegularChunkGrid(chunk_shape=chunk_shape),
@@ -596,7 +596,7 @@ class ShardingCodec(
         )
 
         indexer = list(
-            get_indexer(
+            guess_indexer(
                 selection, shape=shard_shape, chunk_grid=RegularChunkGrid(chunk_shape=chunk_shape)
             )
         )

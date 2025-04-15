@@ -1372,7 +1372,7 @@ def c_order_iter(chunks_per_shard: ChunkCoords) -> Iterator[ChunkCoords]:
     return itertools.product(*(range(x) for x in chunks_per_shard))
 
 
-def get_indexer(
+def guess_indexer(
     selection: SelectionWithFields, shape: ChunkCoords, chunk_grid: ChunkGrid
 ) -> Indexer:
     _, pure_selection = pop_fields(selection)
