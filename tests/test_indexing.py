@@ -12,6 +12,7 @@ from numpy.testing import assert_array_equal
 
 import zarr
 from zarr import Array
+from zarr.codecs import BytesCodec
 from zarr.core.buffer import default_buffer_prototype
 from zarr.core.indexing import (
     BasicSelection,
@@ -1994,3 +1995,16 @@ def test_iter_chunk_regions():
         assert_array_equal(a[region], np.ones_like(a[region]))
         a[region] = 0
         assert_array_equal(a[region], np.zeros_like(a[region]))
+
+@pytest.mark.parametrize("store", ["memory"], indirect=["store"])
+def test_oindex_with_sharding(store) -> None:
+    array = zarr.create_array(
+        store,
+        shape=(1,2,1),
+        chunks=(1,2,1),
+        shards=(1,2,1),
+        dtype=np.int32,
+    )
+    zindexer = (np.array([0]), np.array([0, 0]), np.array([0]))
+    new_data = np.full(array.oindex[zindexer].shape, fill_value=1)
+    array.oindex[zindexer] = new_data
